@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Debug-only overlay: export internal components so the CI E2E harness can
+         drive every screen and start the service via adb. Release builds keep
+         everything non-exported (see src/main/AndroidManifest.xml). -->
+    <application>
+
+        <activity
+            android:name=".GamesActivity"
+            android:exported="true"
+            tools:replace="android:exported" />
+
+        <activity
+            android:name=".StylesActivity"
+            android:exported="true"
+            tools:replace="android:exported" />
+
+        <activity
+            android:name=".EditorActivity"
+            android:exported="true"
+            tools:replace="android:exported" />
+
+        <service
+            android:name=".OverlayService"
+            android:exported="true"
+            tools:replace="android:exported" />
+    </application>
+</manifest>
