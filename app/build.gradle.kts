@@ -1,3 +1,5 @@
+import java.util.Base64
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -22,7 +24,7 @@ android {
             create("release") {
                 val ksFile = File(project.layout.buildDirectory.get().asFile, "ci-signing/release.p12")
                 ksFile.parentFile?.mkdirs()
-                ksFile.writeBytes(java.util.Base64.getMimeDecoder().decode(keystoreB64.trim()))
+                ksFile.writeBytes(Base64.getMimeDecoder().decode(keystoreB64.trim()))
                 storeFile = ksFile
                 storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
                 keyAlias = System.getenv("KEY_ALIAS") ?: ""
