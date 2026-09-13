@@ -1,0 +1,9 @@
+.gradle/
+build/
+local.properties
+keystore/
+.idea/
+*.iml
+.DS_Store
+e2e-out/
+captures/
