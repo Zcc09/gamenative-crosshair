@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 
 /**
@@ -26,9 +27,14 @@ class CrosshairView @JvmOverloads constructor(
     private val mainPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val outlinePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val density: Float = resources.displayMetrics.density
+    private var drawLogs = 0
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (BuildConfig.DEBUG && drawLogs < 20) {
+            drawLogs++
+            Log.i("CrosshairView", "CrosshairView draw #$drawLogs w=$width h=$height shape=${spec.shape} color=${spec.color}")
+        }
         val s = spec
         val cx = width / 2f + s.offsetXDp * density
         val cy = height / 2f + s.offsetYDp * density

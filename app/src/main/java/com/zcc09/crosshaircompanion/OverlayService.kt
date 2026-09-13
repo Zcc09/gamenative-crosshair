@@ -21,6 +21,7 @@ import android.os.Looper
 import android.os.PowerManager
 import android.os.Process
 import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
@@ -48,6 +49,7 @@ class OverlayService : Service() {
 
         const val CHANNEL_ID = "crosshair_overlay"
         const val NOTIF_ID = 42
+        const val TAG = "CrosshairService"
 
         fun start(ctx: Context) {
             val i = Intent(ctx, OverlayService::class.java)
@@ -76,6 +78,7 @@ class OverlayService : Service() {
     private var currentGame: String? = null
     private var lastNotifKey = ""
     private var lastSpecKey = ""
+    private var lastDecision = ""
     private val handler = Handler(Looper.getMainLooper())
 
     private val receiver = object : BroadcastReceiver() {
@@ -237,6 +240,13 @@ class OverlayService : Service() {
             }
         }
 
+        if (BuildConfig.DEBUG) {
+            val d = "decision show=$show fg=$lastFg game=$currentGame spec=${spec.shape}/${spec.color}"
+            if (d != lastDecision) {
+                lastDecision = d
+                Log.i(TAG, d)
+            }
+        }
         applyView(show, spec)
         updateNotification()
     }
@@ -266,6 +276,7 @@ class OverlayService : Service() {
                 view = nv
                 v = nv
                 lastSpecKey = ""
+                if (BuildConfig.DEBUG) Log.i(TAG, "overlay added")
             }
             val key = spec.toJson().toString()
             if (key != lastSpecKey) {
@@ -279,6 +290,7 @@ class OverlayService : Service() {
                     wm?.removeView(v)
                 } catch (e: Exception) {
                 }
+                if (BuildConfig.DEBUG) Log.i(TAG, "overlay removed")
             }
             view = null
             lastSpecKey = ""

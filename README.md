@@ -63,12 +63,16 @@ No local Android SDK/JDK needed — GitHub Actions builds both APKs:
 
 ### End-to-end test
 
-Every CI run boots an Android 14 emulator, installs the debug APK, configures a target app, starts the overlay service, and pixel-verifies two screenshots:
+Every CI run boots an Android 14 emulator, installs the app, and drives the real overlay through adb:
 
-1. crosshair **visible** over a targeted foreground app,
-2. crosshair **gone** over a non-targeted app (launcher).
+1. **UI smoke** — every screen is opened; the job fails on any crash.
+2. **Renderer probe** — the overlay's own view class is rendered into a 1080×2400 bitmap with the active style; center pixels must match the crosshair color and corners must stay untouched. The render is saved as a PNG in the artifacts.
+3. **Visibility** — while a targeted app (Settings) is in the foreground the overlay window must exist on screen and its view must have drawn; while a non-targeted app (launcher) is in the foreground the window must be gone.
+4. **Pause toggle** — the notification's pause action must remove the overlay.
 
-Screenshots and dumps are uploaded as the `e2e-evidence` artifact.
+Note: `adb screencap` and screen recordings exclude non-trusted overlay windows by design on Android 12+, so the overlay can never show up in a screenshot — the renderer bitmap and WindowManager dumps are the evidence instead.
+
+All evidence (render PNG, screenshots, window dumps, full logcat) is uploaded as the `e2e-evidence` artifact.
 
 ## Troubleshooting
 

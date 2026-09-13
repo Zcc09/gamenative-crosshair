@@ -22,6 +22,10 @@
             android:exported="true"
             tools:replace="android:exported" />
 
+        <activity
+            android:name=".RenderProbeActivity"
+            android:exported="true" />
+
         <service
             android:name=".OverlayService"
             android:exported="true"
